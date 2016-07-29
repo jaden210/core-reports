@@ -1,0 +1,119 @@
+#main-body {
+    background-color: #EEE;
+    margin: 0px;
+     padding: 0px;
+     height: 100vh;
+}
+.logo {
+    width: 30px;
+    padding-right: 16px;
+    padding-left: 8px;
+}
+.app-content {
+    padding: 20px;
+}
+.app-content md-card {
+    margin: 20px;
+}
+#main-toolbar {
+    background-color: #2196F3;
+     color:#FFFFFF;
+}
+span {
+    color: white;
+}
+
+.app-toolbar-filler {
+ flex: 1 1 auto;
+}
+
+
+#toolbar-icon-button {
+ box-shadow: none;
+ background: none;
+ border: none;
+ cursor: pointer;
+ filter: none;
+ font-weight: normal;
+ height: auto;
+ line-height: inherit;
+ margin-right: 16px;
+ text-decoration: none;
+}
+
+.icon-button:hover .material-icons {
+ color: #212121 ;
+ cursor: pointer;
+}
+
+button.icon-button {
+ margin-right: 0px;
+ padding-right: 0px;
+ background-color: inherit;
+ border: none;
+ outline: none;
+}
+
+#logo {
+ width: 30px;
+ padding-right: 16px;
+ padding-left: 8px;
+}
+
+#toolbar-text-main {
+    margin-top: -4px; 
+    font-size: 24px;
+}
+#toolbar-text-report {
+    margin-top: -4px; 
+    font-size: 24px;
+    color: #212121;
+    flex-grow: 5;
+}
+
+.material-icons {
+    color: #fff;
+}
+
+md-sidenav {
+    padding: 0px;
+     margin: 0px; 
+    width: 250px;
+}
+
+
+#report-card {
+    padding: 0px;
+    width: 100%;
+}
+.dialog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+   z-index: 1;
+   background-color: rgb(0,0,0);
+   background-color: rgba(0,0,0, 0.5);
+   overflow-y: hidden;
+   transition: 0.8s;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+.dialog-card {
+    
+    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+.top-bar {
+    background-color: #FFF;
+    min-height: 45px;
+    height: 45px;
+    justify-content: center;
+}
+#action-button {
+    float: right;
+    padding: 2px;
+    align-items: flex-end;
+    margin-right: 5px;
+}

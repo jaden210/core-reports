@@ -1,0 +1,126 @@
+  <body>
+    <md-card id="report-card"> 
+      <!--- Everything in the toolbar should be the same for any report --->
+      <md-toolbar class="top-bar">
+        <span id = "toolbar-text-report">{{title}}</span>
+        
+       <button md-button id = "action-button" (click) = "openDialog()">Controls</button>
+       <button md-button id = "action-button" (click) = "downloadReport()">Export CSV</button>
+       <button md-button id = "action-button" (click) = "openInfoPage()">Info</button>
+       <button md-button id = "action-button" (click) = "openReport()">Dashboard</button>
+       <button md-button id = "action-button" (click) = "openDialog()">Controls</button>
+      </md-toolbar> 
+
+      <!--- this is where the table layout and data will go -->
+    <table>
+      <tr class="header">
+        <th> Department </th>
+        <th> Course </th>
+        <th> Section </th>
+        <th> Instructor </th>
+        <th> Estimated Enrollment </th>
+        <th> Actual Enrollment </th>
+        <th> Is Required </th>
+        <th> ISBN </th>
+        <th> Title </th>
+        <th> Author </th>
+        <th> Sale New </th>
+        <th> Sale Used </th>
+        <th> Rent New </th>
+        <th> Rent Used </th>
+      </tr>
+      <md-progress-circle *ngIf = 'showSpinner === true ' mode="indeterminate"></md-progress-circle>
+      <tr *ngFor = 'let report of reportData' class="data">
+        <td> {{report.dept_code}} </td>
+        <td> {{report.course_code}} </td>
+        <td> {{report.section_code}} </td>
+        <td> {{report.instructor_name}} </td>
+        <td> {{report.section_capacity}} </td>
+        <td> {{report.section_enrollment}} </td>
+        <td> {{report.book_required}} </td>
+        <td> {{report.product_code}} </td>
+        <td> {{report.name}} </td>
+        <td> {{report.author}} </td>
+        <td> {{report.sale_new | currency:'USD' :true: '1.2-2'}} </td>
+        <td> {{report.sale_used | currency:'USD' :true: '1.2-2'}} </td>
+        <td> {{report.rent_new | currency:'USD' :true: '1.2-2'}} </td>
+        <td> {{report.rent_used | currency:'USD' :true: '1.2-2'}} </td>
+      </tr>
+    </table>
+
+
+    </md-card>
+
+
+<!--- This is to show the parameters dialog --->
+<div *ngIf = 'showDialog === true ' class="dialog layered-content">
+<md-card class='dialog-card content'>
+  <md-card-title>Select parameters to run the {{title}} report</md-card-title>
+  <md-card-content>
+    <div [ngSwitch] = "currentDropdownState">
+      <div>
+        <button class="catalog-menu-button" id="term-dd">
+          <md-list-item>
+                <h3 md-line (click) = "toggleDropdownState('term')"> Term </h3>
+                <p md-line (click) = "toggleDropdownState('term')">
+                <span class="demo-2"> {{ selectedTermName }} </span>
+                </p>
+          </md-list-item>
+          </button>
+          <div (mouseleave) = "toggleDropdownState(null)" *ngSwitchCase="'term'" class="dropdown-content">
+            <a *ngFor = 'let term of termData' (click) = "toggleDropdownState(null); updateTermDropdown(term)">{{term.name}}</a>
+          </div>
+        </div>
+        <div>
+        <button class="catalog-menu-button" id="term-dd">
+          <md-list-item>
+                <h3 md-line (click) = "toggleDropdownState('department')"> Department </h3>
+                <p md-line (click) = "toggleDropdownState('department')">
+                <span class="demo-2"> {{ selectedDepartmentName }} </span>
+                </p>
+              </md-list-item>
+          </button>
+          <div (mouseleave) = "toggleDropdownState(null)" *ngSwitchCase="'department'" class="dropdown-content">
+            <a (click) = "toggleDropdownState(null); departmentWipeout()">--</a>
+            <a *ngFor = 'let department of departmentData' (click) = "toggleDropdownState(null); updateDepartmentDropdown(department)">{{department.name}}</a>
+          </div>
+        </div>
+    </div>
+  </md-card-content>
+ 
+<md-card-actions align="end">
+        <button md-button (click) = "closeDialog()" >CLOSE</button>
+        <button md-raised-button (click) = "runReport()" class= "raised-button"  >RUN</button>
+   </md-card-actions>
+  
+</md-card>
+</div>
+
+<!--- this is showing the dashboard dialog. note we may want this in its own component at some point -->
+<div *ngIf = 'showReport === true ' class="dialog layered-content">
+  <md-card class="dialog-card content dashboard-card">
+    <md-card-title> {{title}} Dashboard </md-card-title>
+    <md-content class="chart-card">
+      <div class="dashboard-left">
+      <h4 class="dashboard-info-text">You have</h4>
+      <h3 class="dashboard-info-text">2054</h3>
+      <h4 class="dashboard-info-text">total books assigned for {{selectedTermName}}</h4>
+      </div>
+      <base-chart class="chart"
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)">
+      </base-chart>
+    </md-content>
+<md-card-actions align="end">
+        <button md-button (click) = "closeReport()" >CLOSE</button>
+</md-card-actions>
+
+  </md-card>
+</div>
+
+  </body>   

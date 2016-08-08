@@ -1,20 +1,16 @@
-<md-sidenav-layout>
- <md-sidenav #sidenav mode = "side" opened = "false">
-   <md-list dense>  
-   </md-list>
- </md-sidenav>
-
  <body id="main-body">
    <md-toolbar id="main-toolbar">
-     <button id="toolbar-icon-button" (click)="sidenav.toggle()">
        <img id="logo" src="./app/images/Sidewalk_Vector.png">
-     </button>
-     <span id = "toolbar-text-main">{{title}}</span>  
+     <a [routerLink] = "['/tile-nav']">
+     <span id = "toolbar-text-main">{{title}}</span>
+     </a>  
    </md-toolbar>
    
    
-   <app-booklist> Loading... </app-booklist>
-   
+   <router-outlet></router-outlet>
 
- </body>   
-</md-sidenav-layout>
+
+
+
+
+ </body>    

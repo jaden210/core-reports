@@ -31,9 +31,9 @@ const materialPkgs:string[] = [
   'core',
   'button',
   'card',
+  'list',
   'sidenav',
   'toolbar',
-  'icon',
   'input',
   'menu',
   'progress-circle',
@@ -65,6 +65,10 @@ const barrels: string[] = [
   'app',
   'app/shared',
   'app/booklist',
+  'app/tile-navigation',
+  'app/error-handling',
+  'app/booklist/booklist-dashboard',
+  'app/booklist/booklist-control',
   /** @cli-barrel */
 ];
 

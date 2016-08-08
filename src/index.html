@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>CoreReports</title>
@@ -8,16 +9,18 @@
   {{#unless environment.production}}
   <script src="/ember-cli-live-reload.js" type="text/javascript"></script>
   {{/unless}}
+
+  
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-  <!---charts -->
- 
-
+  <link rel="stylesheet" href="app/app.component.css">
 </head>
-<body style="margin:0px; height:100%;">
-  <app-root>Loading...</app-root>
 
+<body style="margin:0px; height:100vh;">
+  <app-root></app-root>
+  <div class="loading">
+         <img id="logo" src="./app/images/Sidewalk_Vector.png">
+  </div>
   
 
     {{#each scripts.polyfills}}

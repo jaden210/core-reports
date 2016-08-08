@@ -1,0 +1,41 @@
+<body>
+  <div class="dialog">
+    <md-card class="dialog-card dashboard-card">
+      <md-card-title>
+        <div>{{title}} Dashboard</div>
+        <div [ngSwitch]="currentDropdownState">
+          <button md-raised-button class="title-button" (click)="toggleDropdownState('term')">
+              <md-list-item>{{ activeData.termName }}</md-list-item>
+          </button>
+          <div (mouseleave)="toggleDropdownState(null)" *ngSwitchCase="'term'" class="dropdown-content">
+            <md-list [dense]>
+              <md-list-item *ngFor='let term of termData' (click)="toggleDropdownState(null); updateTermDropdown(term); closeDialog(true)">{{term.name}}</md-list-item>
+            </md-list>
+          </div>
+        </div>
+      </md-card-title>
+      <md-content class="chart-card">
+        <div class="dashboard-left">
+          <div class="dashboard-item">
+            <h4 class="dashboard-info-text">Total Sections</h4>
+            <h3 class="dashboard-info-text">{{dashboardData[0].sectionCount}}</h3>
+          </div>
+          <div class="dashboard-item">
+            <h4 class="dashboard-info-text">Isbns Without a Sale Price</h4>
+            <h3 class="dashboard-info-text">{{dashboardData[0].isbnNoPrice}}</h3>
+          </div>
+          <div class="dashboard-item">
+            <h4 class="dashboard-info-text">Isbns Available for Rent</h4>
+            <h3 class="dashboard-info-text">{{dashboardData[0].isbnForRent}}</h3>
+          </div>
+        </div>
+        <base-chart class="chart" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+          [chartType]="barChartType" (chartHover)="chartHovered($event)">
+        </base-chart>
+      </md-content>
+      <md-card-actions align="end">
+        <button md-raised-button (click)="closeDialog(false)" class="primary-action-button">CLOSE</button>
+      </md-card-actions>
+    </md-card>
+  </div>
+</body>

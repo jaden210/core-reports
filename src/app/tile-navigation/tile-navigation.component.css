@@ -1,0 +1,30 @@
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+md-card {
+    margin: 8px;
+    width: 25%;
+    height: 100%;
+    flex-grow: 1;
+}
+
+md-card-title {
+    text-align: center;
+}
+
+.tile-img {
+    height: 48px;
+    margin: auto;
+}
+
+.footer-img {
+    height: 25px;
+    opacity: .8;
+}
+
+.footer-btn {
+    border: 0 solid black;
+    background: transparent;
+}

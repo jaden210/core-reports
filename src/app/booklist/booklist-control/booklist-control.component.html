@@ -1,0 +1,53 @@
+<body>
+  <div class="dialog">
+    <md-card class='dialog-card '>
+      <md-card-title>Select parameters to run the {{title}} report</md-card-title>
+      <md-card-content>
+        <div [ngSwitch]="currentDropdownState">
+          <div>
+            <button class="catalog-menu-button" id="term-dd">
+            <md-list-item>
+              <h3 md-line (click) = "toggleDropdownState('term')"> Term </h3>
+              <p md-line (click) = "toggleDropdownState('term')">
+                <span class="demo-2"> {{ activeData.termName }} </span>
+              </p>
+            </md-list-item>
+          </button>
+          
+            <div (mouseleave)="toggleDropdownState(null)" *ngSwitchCase="'term'" class="dropdown-content">
+              <md-list [dense]>
+                <md-list-item *ngFor='let term of termData'>
+                  <a (click)="toggleDropdownState(null); updateTermDropdown(term)">{{term.name}}</a>
+                </md-list-item>
+              </md-list>
+            </div>
+          </div>
+          <div>
+            <button class="catalog-menu-button" id="term-dd">
+            <md-list-item>
+              <h3 md-line (click) = "toggleDropdownState('department')"> Department </h3>
+              <p md-line (click) = "toggleDropdownState('department')">
+                <span class="demo-2"> {{ selectedDepartmentName }} </span>
+              </p>
+            </md-list-item>
+          </button>
+            <div (mouseleave)="toggleDropdownState(null)" *ngSwitchCase="'department'" class="dropdown-content">
+              <md-list [dense]>
+                <md-list-item>
+                  <a (click)="toggleDropdownState(null); departmentWipeout()">--</a>
+                </md-list-item>
+                <md-list-item *ngFor='let department of departmentData'>
+                  <a (click)="toggleDropdownState(null); updateDepartmentDropdown(department)">{{department.name}}</a>
+                </md-list-item>
+              </md-list>
+            </div>
+          </div>
+        </div>
+      </md-card-content>
+      <md-card-actions align="end">
+        <button md-button (click)="closeDialog(false)">CLOSE</button>
+        <button md-raised-button [disabled]="isDisabled" (click)="closeDialog(true)" class="primary-action-button">RUN</button>
+      </md-card-actions>
+    </md-card>
+  </div>
+</body>

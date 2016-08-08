@@ -1,10 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter }   from '@angular/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass }        from '@angular/common';
+import { ROUTER_DIRECTIVES, Router }                        from '@angular/router';
+import { BooklistDashboardComponent }                       from './booklist-dashboard/booklist-dashboard.component';
+import { BooklistControlComponent }                         from './booklist-control/booklist-control.component';
 import { BooklistService }                                  from './booklist.service';
-import { BooklistDialog }                                   from './booklist-dialog.directive';
 import { MD_CARD_DIRECTIVES }                               from '@angular2-material/card';
 import { MD_TOOLBAR_DIRECTIVES }                            from '@angular2-material/toolbar';
-import { MD_BUTTON_DIRECTIVES }                             from '@angular2-material/button'
+import { MD_BUTTON_DIRECTIVES }                             from '@angular2-material/button';
+import { MD_LIST_DIRECTIVES }                               from '@angular2-material/list';
 import { MD_PROGRESS_CIRCLE_DIRECTIVES }                    from '@angular2-material/progress-circle';
 import { CHART_DIRECTIVES }                                 from 'ng2-charts/ng2-charts';
 
@@ -12,175 +15,138 @@ import { CHART_DIRECTIVES }                                 from 'ng2-charts/ng2
   moduleId: module.id,
   selector: 'app-booklist',
   templateUrl: 'booklist.component.html',
-  styleUrls: ['../app.component.css','booklist.component.css'],
-  directives: [MD_CARD_DIRECTIVES,
-  MD_PROGRESS_CIRCLE_DIRECTIVES,
-  MD_TOOLBAR_DIRECTIVES,
-  MD_BUTTON_DIRECTIVES,
-  CHART_DIRECTIVES],
-  providers: [ BooklistService ],
+  styleUrls: ['../app.component.css', 'booklist.component.css'],
+  directives: [
+    MD_CARD_DIRECTIVES,
+    MD_PROGRESS_CIRCLE_DIRECTIVES,
+    MD_TOOLBAR_DIRECTIVES,
+    MD_BUTTON_DIRECTIVES,
+    CHART_DIRECTIVES,
+    MD_LIST_DIRECTIVES,
+    ROUTER_DIRECTIVES,
+    BooklistDashboardComponent,
+    BooklistControlComponent
+  ],
+  providers: [
+    BooklistService
+  ],
 })
 
 export class BooklistComponent implements OnInit {
-  constructor(private _booklistSevice: BooklistService) {}
-  reportData : any;
-  termData : any;
-  departmentData : any;
-  showSpinner : boolean = false;
-  showDialog : boolean = false;
-  showReport : boolean = false;
+  constructor(private _booklistSevice: BooklistService, private _router: Router) { }
+  reportData: any;
+  termData: any;
+  departmentData: any;
+  showSpinner: boolean = false;
+  showDialog: boolean = false;
+  showDashboard: boolean = false;
+  showControl: boolean = false;
+  showReport: boolean = false;
   title = 'Booklist';
-  //url parameters
-  urlParams : any = {'termId' : null, 'departmentId' : null };
   locationId = "21944";
+  //url parameters
+  errInfo: any = { 'report': this.title, 'locationId': this.locationId };
+  activeData: any = { 'locationId': this.locationId, 'termName': "", 'termId': "", 'departmentName': "", 'departmentId': "" };
+
   termId = "";
   departmentId = "";
 
   runReport() {
-    this.showDialog = false;
     this.showSpinner = true;
-    console.log(this.urlParams);
-    this._booklistSevice.getReport(this.urlParams)
-    .subscribe(data => {
-    this.reportData = data.booklistLine;
-    this.showSpinner = false;
-    });
-  }
-  openInfoPage() {
-    window.open( "https://support.gosidewalk.com/hc/en-us/articles/221873168-Test-this-article");
+    this._booklistSevice.getReport(this.activeData)
+      .subscribe(
+      data => { this.reportData = data.booklistLine, this.checkForData() },
+      error => { this.noData(error) },
+      () => this.showSpinner = false
+      );
   }
 
-//downloading and exporting data
+  checkForData(): void {
+    if (this.reportData.length >= 1) {
+      console.log('report data exists')
+    } else {
+      console.log('no report data')
+    }
+  }
+
+  openInfoPage() {
+    window.open("https://support.gosidewalk.com/hc/en-us/articles/221873168-Test-this-article");
+  }
+
+  //downloading and exporting data
   downloadReport() {
-    this._booklistSevice.getReport(this.urlParams)
-    .subscribe(data => 
-      this.startDownload(data.booklistLine)
-    )};
+    this._booklistSevice.getReport(this.activeData)
+      .subscribe(data =>
+        this.startDownload(data.booklistLine)
+      )
+  };
 
   startDownload(data: any[]) {
-    var blob = new Blob([data], {type: 'text/csv'});
+    var blob = new Blob([data], { type: 'text/csv' });
     var url = window.URL.createObjectURL(blob);
     window.open(url);
   }
-  
+
   //Dialog stuff goes here
   openDialog() {
     this.showDialog = true;
-    
   }
-  closeDialog() {
-    this.showDialog = false;
-  }
- 
- ngOnInit() {
-   //the first input control we will load here with the page
-   this.getTermItems();
-   //then lets show the control dialog so we can set the parameters
-   this.openDialog(); 
+  closeDialog($event) {
+    this.showControl = $event;
+    this.showDashboard = $event;
   }
 
-
-//Input control stuff goes here
-currentDropdownState: string;
-
-@Input() url: string;
-  @Output() titlesUrl: EventEmitter<string> = new EventEmitter<string>();
-  dialogObject: any = {subject:null, action:null, url:null};
-  @Output() catalogDialogs = new EventEmitter(); //for dialogs
-
-  toggleDropdownState(currentState): void{
-    this.currentDropdownState = currentState;
+  //dashboard controls
+  openDashboard() {
+    this.showDashboard = true;
   }
-  
-//Term in control dialog
-  selectedTermName = "";
-  term : any = [];
-
-  getTermItems() {
-    this._booklistSevice.getTerm(this.locationId)
-    .subscribe(data => {
-      this.termData = data;
-      if (this.termData[0]) {
-        this.updateTermDropdown(this.termData[0])
-      } else {
-        alert("no term data passed into getTermItems function")
-      }
-      });
+  closeDashboard($event) {
+    if ($event) {
+      this.runReport();
+    } else {
+      this.showDashboard = $event;
+    }
   }
-  
-  updateTermDropdown(term: any): void {
-      if (term) {
-        this.selectedTermName = term.name;
-        this.urlParams.termId = term.id;       
-        this.selectedDepartmentName = "--";
-      }
-      //now that we chose a term, lets load the departments
-      this.getDepartmentItems();
+  //control controls
+  openControl() {
+    this.showControl = true;
   }
-  
-//Department in control dialog
-selectedDepartmentName = '';
-department : any[];
+  closeControl($event) {
+    if ($event) {
+      this.runReport();
+    };
+    this.showControl = false;
+    this.showReport = true;
+  }
 
-getDepartmentItems() {
-  this._booklistSevice.getDepartment(this.urlParams.termId)
-    .subscribe(data => {
-      this.departmentData = data;
-    });
-}
-  
-updateDepartmentDropdown(department): void {
-     if (department) {
-     this.selectedDepartmentName = department.name;
-     this.urlParams.departmentId = department.id;
-     } else { alert("no department.")}
-}
-   departmentWipeout() {
-    this.updateTermDropdown(this.term)
+  showValue() {
+    console.log(this.activeData);
+  }
+
+  ngOnInit() {
+    //then lets show the control dialog so we can set the parameters
+    this.openControl();
+    this.openDashboard();
   }
 
 
-//chart dialog
-dashboardData : any;
- public barChartOptions:any = {
-    scaleShowVerticalLines: false,
-    responsive: true
-  };
-  public barChartLabels:string[] = ['Is Required', 'Optional'];
-  public barChartType:string = 'pie';
-  public barChartLegend:boolean = true;
 
-  public barChartData:any[] = [
-    {data: [65, 80]}
-  ];
+  //error dialogshowNoDataDialog : boolean = false;
+  showNoDataDialog: boolean = false;
+  isDisabled: boolean = true;
 
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
+  noData(error) {
+    this.showNoDataDialog = true;
+    alert("there is an error: " + error);
   }
 
-  public chartHovered(e:any):void {
-    console.log(e);
+  closeErrorDialog() {
+    this.showNoDataDialog = false;
+    this.openDialog();
   }
 
-
-runDashboard() {
-    this._booklistSevice.getReport(this.urlParams)
-    .subscribe(data => {
-    this.dashboardData = data.booklistLine;
-    });
-    
+  emailError() {
+    console.log('send an email');
+    this.showNoDataDialog = false;
   }
-
-openReport() {
-  this.showReport = true;
-  this.runDashboard();
-}
-closeReport() {
-  this.showReport = false;
-}
-
-
-
-
 }

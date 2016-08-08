@@ -1,0 +1,42 @@
+.dashboard-card {
+    width: 75%;
+}
+.dashboard-card {
+    width: 100%;
+}
+
+md-card-title {
+     display:flex;
+     justify-content: space-between;
+}
+
+.title-button {
+    width: 200px;
+}
+
+.chart-card {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.dashboard-left {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.dashboard-item {
+}
+
+.dashboard-info-text {
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.chart {
+    display: block;
+    width: 50%;
+}

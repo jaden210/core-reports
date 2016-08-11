@@ -3,17 +3,14 @@
     <md-card class='dialog-card-inline'>
       <md-card-title>Select parameters to run the {{title}} report</md-card-title>
       <md-card-content>
-        <div [ngSwitch]="currentDropdownState">
-          <div>
+        <div>
+          <div [ngSwitch]="currentDropdownState">
             <button class="catalog-menu-button" id="term-dd">
-            <md-list-item>
-              <h3 md-line (click) = "toggleDropdownState('term')"> Term </h3>
-              <p md-line (click) = "toggleDropdownState('term')">
-                <span class="demo-2"> {{ activeData.termName }} </span>
-              </p>
-            </md-list-item>
-          </button>
-          
+              <md-list-item (click) = "toggleDropdownState('term')">
+                <h3 md-line> Term </h3>
+                <p md-line>{{ activeData.termName }}</p>
+              </md-list-item>
+            </button>
             <div (mouseleave)="toggleDropdownState(null)" *ngSwitchCase="'term'" class="dropdown-content">
               <md-list [dense]>
                 <md-list-item *ngFor='let term of termData'>
@@ -21,25 +18,23 @@
                 </md-list-item>
               </md-list>
             </div>
-          </div>
-          <div>
-            <button class="catalog-menu-button" id="term-dd">
-            <md-list-item>
-              <h3 md-line (click) = "toggleDropdownState('department')"> Department </h3>
-              <p md-line (click) = "toggleDropdownState('department')">
-                <span class="demo-2"> {{ selectedDepartmentName }} </span>
-              </p>
-            </md-list-item>
-          </button>
-            <div (mouseleave)="toggleDropdownState(null)" *ngSwitchCase="'department'" class="dropdown-content">
-              <md-list [dense]>
-                <md-list-item>
-                  <a (click)="toggleDropdownState(null); departmentWipeout()">--</a>
+            <div>
+              <button class="catalog-menu-button" id="term-dd">
+                <md-list-item (click) = "toggleDropdownState('department')">
+                  <h3 md-line>Department</h3>
+                  <p md-line>{{ selectedDepartmentName }}</p>
                 </md-list-item>
-                <md-list-item *ngFor='let department of departmentData'>
-                  <a (click)="toggleDropdownState(null); updateDepartmentDropdown(department)">{{department.name}}</a>
-                </md-list-item>
-              </md-list>
+              </button>
+              <div (mouseleave)="toggleDropdownState(null)" *ngSwitchCase="'department'" class="dropdown-content">
+                <md-list [dense]>
+                  <md-list-item>
+                    <a (click)="toggleDropdownState(null); departmentWipeout()">--</a>
+                  </md-list-item>
+                  <md-list-item *ngFor='let department of departmentData'>
+                    <a (click)="toggleDropdownState(null); updateDepartmentDropdown(department)">{{department.name}}</a>
+                  </md-list-item>
+                </md-list>
+              </div>
             </div>
           </div>
         </div>

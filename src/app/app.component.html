@@ -4,6 +4,13 @@
      <a [routerLink] = "['/tile-nav']">
      <span id = "toolbar-text-main">{{title}}</span>
      </a>  
+     <md-toolbar-row *ngIf="_toolbarService.showToolbar" class="secondary">
+     <span id="toolbar-text-report">{{_toolbarService?.activeReportTitle}}</span>
+      <button md-button id="action-button" (click)="openControl()">Controls</button>
+      <button md-button id="action-button" (click)="downloadReport()">Export CSV</button>
+      <button md-button id="action-button" (click)="openInfoPage()">Info</button>
+      <button md-button id="action-button" (click)="openDashboard()">Dashboard</button>
+     </md-toolbar-row>
    </md-toolbar>
    
    

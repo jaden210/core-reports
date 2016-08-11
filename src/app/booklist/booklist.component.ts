@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter }   from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter }   from '@angular/core';
 import { CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass }        from '@angular/common';
 import { ROUTER_DIRECTIVES, Router }                        from '@angular/router';
+import { ToolbarService }                                   from '../toolbar.service';
 import { BooklistDashboardComponent }                       from './booklist-dashboard/booklist-dashboard.component';
 import { BooklistControlComponent }                         from './booklist-control/booklist-control.component';
+import { BooklistReportComponent }                          from './booklist-report/booklist-report.component';
 import { BooklistService }                                  from './booklist.service';
 import { MD_CARD_DIRECTIVES }                               from '@angular2-material/card';
 import { MD_TOOLBAR_DIRECTIVES }                            from '@angular2-material/toolbar';
@@ -25,7 +27,8 @@ import { CHART_DIRECTIVES }                                 from 'ng2-charts/ng2
     MD_LIST_DIRECTIVES,
     ROUTER_DIRECTIVES,
     BooklistDashboardComponent,
-    BooklistControlComponent
+    BooklistControlComponent,
+    BooklistReportComponent
   ],
   providers: [
     BooklistService
@@ -33,53 +36,22 @@ import { CHART_DIRECTIVES }                                 from 'ng2-charts/ng2
 })
 
 export class BooklistComponent implements OnInit {
-  constructor(private _booklistSevice: BooklistService, private _router: Router) { }
-  reportData: any;
-  termData: any;
-  departmentData: any;
-  showSpinner: boolean = false;
-  showDialog: boolean = false;
-  showDashboard: boolean = false;
-  showControl: boolean = false;
+  constructor(private _toolbarService: ToolbarService, private _booklistSevice: BooklistService, private _router: Router) 
+  {
+    _toolbarService.showToolbar = true;
+  }
+
   showReport: boolean = false;
-  title = 'Booklist';
-  locationId = "21944";
-  //url parameters
-  errInfo: any = { 'report': this.title, 'locationId': this.locationId };
-  activeData: any = { 'locationId': this.locationId, 'termName': "", 'termId': "", 'departmentName': "", 'departmentId': "" };
+  title: string = 'Booklist';
 
-  termId = "";
-  departmentId = "";
-
-  runReport() {
-    this.showSpinner = true;
-    this._booklistSevice.getReport(this.activeData)
-      .subscribe(
-      data => { this.reportData = data.booklistLine, this.checkForData() },
-      error => { this.noData(error) },
-      () => this.showSpinner = false
-      );
-  }
-
-  checkForData(): void {
-    if (this.reportData.length >= 1) {
-      console.log('report data exists')
-    } else {
-      console.log('no report data')
-    }
-  }
-
-  openInfoPage() {
-    window.open("https://support.gosidewalk.com/hc/en-us/articles/221873168-Test-this-article");
-  }
 
   //downloading and exporting data
   downloadReport() {
-    this._booklistSevice.getReport(this.activeData)
-      .subscribe(data =>
-        this.startDownload(data.booklistLine)
-      )
-  };
+    console.log('downloading');
+    console.log(this._booklistSevice.reportData);
+    this._booklistSevice.doDownloat = true;
+    this._toolbarService.doDownload = false;
+  }
 
   startDownload(data: any[]) {
     var blob = new Blob([data], { type: 'text/csv' });
@@ -87,66 +59,22 @@ export class BooklistComponent implements OnInit {
     window.open(url);
   }
 
-  //Dialog stuff goes here
-  openDialog() {
-    this.showDialog = true;
-  }
-  closeDialog($event) {
-    this.showControl = $event;
-    this.showDashboard = $event;
+  //dashboard controls
+  closeDashboard() {
+    this._toolbarService.showDashboard = false;
   }
 
-  //dashboard controls
-  openDashboard() {
-    this.showDashboard = true;
-  }
-  closeDashboard($event) {
-    if ($event) {
-      this.runReport();
-    } else {
-      this.showDashboard = $event;
-    }
-  }
   //control controls
-  openControl() {
-    this.showControl = true;
-  }
+
   closeControl($event) {
-    if ($event) {
-      this.runReport();
-    };
-    this.showControl = false;
+    this._toolbarService.showControl = false;
     this.showReport = true;
   }
 
-  showValue() {
-    console.log(this.activeData);
-  }
-
   ngOnInit() {
-    //then lets show the control dialog so we can set the parameters
-    this.openControl();
-    this.openDashboard();
-  }
-
-
-
-  //error dialogshowNoDataDialog : boolean = false;
-  showNoDataDialog: boolean = false;
-  isDisabled: boolean = true;
-
-  noData(error) {
-    this.showNoDataDialog = true;
-    alert("there is an error: " + error);
-  }
-
-  closeErrorDialog() {
-    this.showNoDataDialog = false;
-    this.openDialog();
-  }
-
-  emailError() {
-    console.log('send an email');
-    this.showNoDataDialog = false;
+    //passing data to the toolbar
+    this._toolbarService.showControl = true;
+    this._toolbarService.activeReportTitle = this.title;
+    this._toolbarService.infoLink = this._booklistSevice.infoLink;
   }
 }

@@ -70,7 +70,7 @@ button.icon-button {
 #toolbar-text-report {
     margin-top: -4px; 
     font-size: 24px;
-    color: #212121;
+    color: white;
     flex-grow: 5;
 }
 
@@ -104,7 +104,7 @@ width: 100%;
 }
 
 
-#report-card {
+.report-card {
     padding: 0px;
     width: 100%;
 }
@@ -168,4 +168,16 @@ app-root:empty + .loading img {
 .primary-action-button {
     background-color: #2196F3;
     color: #FFF;
+}
+
+md-toolbar {
+    padding: 0 !important;
+}
+
+md-toolbar-row {
+    padding: 0 16px;
+}
+
+.secondary {
+    background-color: #03A9F4;
 }

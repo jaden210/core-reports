@@ -6,6 +6,7 @@ import { MD_CARD_DIRECTIVES }                               from '@angular2-mate
 import { MD_BUTTON_DIRECTIVES }                             from '@angular2-material/button';
 import { MD_LIST_DIRECTIVES }                               from '@angular2-material/list';
 import { CHART_DIRECTIVES }                                 from 'ng2-charts/ng2-charts';
+import 'chartjs';
 
 @Component({
   moduleId: module.id,
@@ -54,7 +55,7 @@ export class BooklistDashboardComponent implements OnInit {
   }
 
   runDashboard() {
-    this._booklistSevice.getDashboard(this.activeData)
+    this._booklistSevice.getDashboard()
       .subscribe(
       data => { this.dashboardData = data, this.updateChart() }
       )
@@ -64,18 +65,8 @@ export class BooklistDashboardComponent implements OnInit {
     this.closeDashboard.emit(boolean);
   }
 
-  ngDoCheck() {
-    if (this.activeData.termId !== this.oldTermId) {
-      this.runDashboard();
-      this.oldTermId = this.activeData.termId;
-    }
-    if (this.activeData.departmentId !== this.oldDepartmentId) {
-      this.runDashboard();
-      this.oldDepartmentId = this.activeData.departmentId;
-    }
-  }
-
   ngOnInit() {
+    this.runDashboard();
   }
 }
 

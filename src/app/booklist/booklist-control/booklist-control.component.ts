@@ -19,35 +19,40 @@ import { MD_LIST_DIRECTIVES }                               from '@angular2-mate
 export class BooklistControlComponent implements OnInit {
   constructor(private _booklistSevice: BooklistService) { }
 
-  termData: any;
+  
   term: any = [];
-  departmentData: any;
   department: any[];
-  selectedDepartmentName = '';
+  selectedDepartmentName = '--';
   isDisabled: boolean = true;
-  title = 'Booklist';
-  locationId = "21944";
   currentDropdownState: string;
+  termData: any = this._booklistSevice.termData;
+  departmentData: any;
+  activeData: any = {
+    'locationId': this._booklistSevice.activeData.locationId,
+    'termName': this._booklistSevice.activeData.termName,
+    'termId': this._booklistSevice.activeData.termId,
+    'departmentName': this._booklistSevice.activeData.departmentName,
+    'departmentId': this._booklistSevice.activeData.departmentId
+  };
+
   //closebutton
   @Output() closeControl: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Input() activeData: any;
 
   toggleDropdownState(currentState): void {
     this.currentDropdownState = currentState;
   }
 
-  getTermItems() {
-    this._booklistSevice.getTerm(this.activeData.locationId)
-      .subscribe(
-      data => {
-        this.termData = data;
-        if (!this.activeData.termName) {
-          this.updateTermDropdown(this.termData[0]);
-        } else {
-          this.getDepartmentItems();
-          this.isDisabled = false;
-        }
-      });
+  formBuilder() {
+    if (!this._booklistSevice.termData) {
+      this._booklistSevice.getTerm()
+        .subscribe(
+        data => {
+          this.termData = data;
+          this.updateTermDropdown(this.termData[0]);  
+        }); 
+    } else {
+      this.getDepartmentItems();
+    }    
   }
 
   updateTermDropdown(term: any): void {
@@ -57,7 +62,6 @@ export class BooklistControlComponent implements OnInit {
       this.selectedDepartmentName = "--";
       this.activeData.departmentName = "";
       this.activeData.departmentId = "";
-      this.isDisabled = false;
     }
     //now that we chose a term, lets load the departments
     this.getDepartmentItems();
@@ -67,8 +71,8 @@ export class BooklistControlComponent implements OnInit {
     this._booklistSevice.getDepartment(this.activeData.termId)
       .subscribe(data => {
         this.departmentData = data;
-
       });
+    this.isDisabled = false;
   }
 
   updateDepartmentDropdown(department): void {
@@ -76,7 +80,7 @@ export class BooklistControlComponent implements OnInit {
       this.selectedDepartmentName = department.name;
       this.activeData.departmentName = department.name;
       this.activeData.departmentId = department.id;
-    } else { alert("no department.") }
+    }
   }
 
   departmentWipeout() {
@@ -86,13 +90,21 @@ export class BooklistControlComponent implements OnInit {
   }
 
   closeDialog(boolean) {
+    if (boolean) {
+      this._booklistSevice.activeData = this.activeData;
+      this._booklistSevice.doRun = true;
+    };
+    //we are only caching the termData because it is a required parameter
+    this._booklistSevice.termData = this.termData;
     this.closeControl.emit(boolean);
   }
 
   ngOnInit() {
-    if (this.activeData.departmentName) {
-      this.selectedDepartmentName = this.activeData.departmentName;
-    } else this.selectedDepartmentName = "--";
-    this.getTermItems();    
-  }
+    this.formBuilder(); 
+    //because the department is optional, we need to do this check to see if there is one and set the displayed name accordingly.
+    //hopefully we can find a more efficient way of making an optional dropdown, but for now let's do this.
+    if (this._booklistSevice.activeData.departmentName) {
+      this.selectedDepartmentName = this._booklistSevice.activeData.departmentName;
+    }
+}
 }

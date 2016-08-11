@@ -15,14 +15,16 @@ const map: any = {
     'chartjs-color': 'vendor/chartjs-color/dist/color.js',
     'chartjs-color-string': 'vendor/chartjs-color-string/color-string.js',
     'moment': 'vendor/moment/moment.js',
-    'ng2-table': 'vendor/ng2-table'  
+    'ag-grid-ng2': 'node_modules/ag-grid-ng2',
+    'ag-grid': 'node_modules/ag-grid'
 };
 
 /** User packages configuration. */
 const packages: any = {
     'ng2-charts': { defaultExtension: 'js', main: 'ng2-charts.js' },
-    'ng2-table': { defaultExtension: 'js', main: 'ng2-table.js' },
-    'chartjs': { defaultExtension: 'js', format: 'cjs' }
+    'chartjs': { defaultExtension: 'js', format: 'cjs' },
+    'ag-grid-ng2': { defaultExtension: "js" },
+    'ag-grid': { defaultExtension: "js" }
 };
 
 

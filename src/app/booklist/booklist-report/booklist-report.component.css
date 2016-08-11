@@ -1,3 +1,45 @@
+body {
+     color: rgba(0,0,0,0.87);
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+}
+
+tr {
+    height: 48px;
+}
+
+td, th {
+    border-top: 1px solid rgba(0,0,0,0.12);
+    text-align: left;
+    padding: 5px 2px 5px 2px;
+    height: 15px;
+    width: 10px;
+    overflow: hidden;
+    white-space: pre;
+}
+md-progress-circle {
+    margin: auto;
+}
+
+.header {
+    font-size: 8pt;
+}
+.data {
+    font-size: 8pt;
+}
+
+
+
+
+
+
+
+
 a {
  cursor: pointer;
  
@@ -109,11 +151,16 @@ button.list-button {
  color: #e0e0e0 
 }
 
-.dialog-inline {
+.loading-spinner {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
 }
 
-.dialog-card-inline {
-    width: 50%;
+.stuck {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
-
